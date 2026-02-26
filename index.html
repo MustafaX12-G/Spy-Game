@@ -1,118 +1,48 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>لعبة الجاسوس الاحترافية</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap');
-        body { font-family: 'Cairo', sans-serif; background-color: #0b0f19; color: #fff; user-select: none; }
-        .glass-panel { background: rgba(20, 27, 45, 0.95); border: 1px solid #2dd4bf33; border-radius: 24px; }
-        .btn-cyan { background: #2dd4bf; color: #0b0f19; font-weight: 900; }
-        .hidden-view { display: none !important; }
-        .icon-massive { font-size: 140px; }
-    </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>لعبة الجاسوس</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap');
+body { font-family: 'Cairo', sans-serif; background-color: #0b0f19; color: #fff; user-select: none; }
+.glass { background: rgba(20, 27, 45, 0.95); border: 1px solid #2dd4bf33; border-radius: 20px; }
+.btn-c { background: #2dd4bf; color: #0b0f19; font-weight: 900; padding: 15px; border-radius: 12px; width: 100%; }
+.hidden { display: none !important; }
+</style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
-    <div id="setup-screen" class="w-full max-w-md glass-panel p-6 text-center">
-        <i class="fa-solid fa-user-secret text-6xl mb-4"></i>
-        <h1 class="text-3xl font-black mb-6">الجاسوس</h1>
-        <div id="scoresContainer" class="flex flex-wrap justify-center gap-2 mb-6 text-xs font-bold"></div>
-        <div class="mb-4 bg-gray-900 p-4 rounded-xl border border-gray-800">
-            <label class="block text-xs mb-3 text-[#2dd4bf]">عدد اللاعبين</label>
-            <div class="flex justify-center items-center gap-6">
-                <button onclick="changeSettings('players', -1)" class="bg-gray-800 w-12 h-12 rounded">-</button>
-                <span id="playerCount" class="text-3xl font-black w-12">4</span>
-                <button onclick="changeSettings('players', 1)" class="bg-gray-800 w-12 h-12 rounded">+</button>
-            </div>
-        </div>
-        <button onclick="showCategories()" class="btn-cyan w-full py-4 rounded-xl text-xl">التالي</button>
-    </div>
-    <div id="category-screen" class="hidden-view"></div>
-    <div id="pass-screen" class="hidden-view"></div>
-    <div id="card-screen" class="hidden-view"></div>
-    <div id="timer-screen" class="hidden-view"></div>
-    <div id="voting-screen" class="hidden-view"></div>
-    <div id="result-screen" class="hidden-view"></div>
-    <div id="category-screen" class="w-full max-w-md glass-panel p-6 text-center shadow-2xl hidden-view">
-        <h2 class="text-2xl font-black mb-6 text-[#2dd4bf]">اختر المهمة</h2>
-        <div class="grid grid-cols-2 gap-3" id="categories-container"></div>
-    </div>
-
-    <div id="pass-screen" class="w-full max-w-md p-6 text-center hidden-view flex flex-col justify-center min-h-[500px]">
-        <h2 class="text-xl font-bold mb-2 text-[#2dd4bf]">اللاعب <span id="currentPlayerNumDisplay">1</span></h2>
-        <button onclick="showCard()" class="btn-cyan w-full py-5 rounded-xl text-2xl font-black">رؤية بطاقتي</button>
-    </div>
-
-    <div id="card-screen" class="w-full max-w-md p-6 text-center hidden-view flex flex-col items-center justify-center min-h-[500px]">
-        <div id="cardContent" class="w-full flex-grow flex flex-col items-center justify-center"></div>
-        <button onclick="hideCard()" class="btn-cyan w-full py-4 rounded-xl mt-8">أخفِ ومرر</button>
-    </div>
-
-    <script>
-        // برمجة الأزرار والكلمات
-        const database = {
-            "طعام": [{n:"بيتزا", i:"fa-pizza-slice"}, {n:"برجر", i:"fa-burger"}],
-            "حيوانات": [{n:"أسد", i:"fa-cat"}, {n:"نمر", i:"fa-cat"}]
-        };
-        let players = 4, currentPassIndex = 0, viewOrder = [], playerRoles = {}, currentWord = {};
-
-        function changeSettings(type, val) {
-            players = Math.max(3, Math.min(10, players + val));
-            document.getElementById('playerCount').innerText = players;
-        }
-
-        function showCategories() {
-            const container = document.getElementById('categories-container');
-            container.innerHTML = '';
-            for (let cat in database) {
-                let btn = document.createElement('button');
-                btn.className = 'bg-gray-900 border border-gray-700 py-4 rounded-xl text-white font-bold';
-                btn.innerText = cat;
-                btn.onclick = () => startGame(cat);
-                container.appendChild(btn);
-            }
-            document.getElementById('setup-screen').classList.add('hidden-view');
-            document.getElementById('category-screen').classList.remove('hidden-view');
-        }
-
-        function startGame(cat) {
-            currentWord = database[cat][Math.floor(Math.random() * database[cat].length)];
-            let roles = Array(players).fill('مواطن');
-            roles[0] = 'جاسوس';
-            roles.sort(() => Math.random() - 0.5);
-            viewOrder = Array.from({length: players}, (_, i) => i + 1);
-            for(let i=0; i<players; i++) playerRoles[viewOrder[i]] = roles[i];
-            currentPassIndex = 0;
-            document.getElementById('currentPlayerNumDisplay').innerText = viewOrder[currentPassIndex];
-            document.getElementById('category-screen').classList.add('hidden-view');
-            document.getElementById('pass-screen').classList.remove('hidden-view');
-        }
-
-        function showCard() {
-            const content = document.getElementById('cardContent');
-            const role = playerRoles[viewOrder[currentPassIndex]];
-            if (role === 'جاسوس') {
-                content.innerHTML = '<i class="fa-solid fa-user-secret text-8xl mb-4"></i><h2 class="text-4xl font-black">أنت الجاسوس</h2>';
-            } else {
-                content.innerHTML = `<i class="fa-solid ${currentWord.i} text-8xl mb-4 text-[#2dd4bf]"></i><h2 class="text-4xl font-black">${currentWord.n}</h2>`;
-            }
-            document.getElementById('pass-screen').classList.add('hidden-view');
-            document.getElementById('card-screen').classList.remove('hidden-view');
-        }
-
-        function hideCard() {
-            currentPassIndex++;
-            if (currentPassIndex < players) {
-                document.getElementById('currentPlayerNumDisplay').innerText = viewOrder[currentPassIndex];
-                document.getElementById('card-screen').classList.add('hidden-view');
-                document.getElementById('pass-screen').classList.remove('hidden-view');
-            } else {
-                location.reload(); // إعادة البداية مؤقتاً
-            }
-        }
-    </script>
+<body class="min-h-screen flex items-center justify-center p-4 text-center">
+<div id="s1" class="w-full max-w-md glass p-6">
+<i class="fa-solid fa-user-secret text-6xl mb-4"></i><h1 class="text-3xl font-black mb-8">الجاسوس</h1>
+<div class="bg-gray-900 p-4 rounded-xl mb-6"><p class="text-[#2dd4bf] text-sm mb-2">عدد اللاعبين</p>
+<div class="flex justify-center items-center gap-6"><button onclick="vP(-1)" class="w-12 h-12 bg-gray-800 rounded">-</button><span id="pC" class="text-3xl font-bold w-10">4</span><button onclick="vP(1)" class="w-12 h-12 bg-gray-800 rounded">+</button></div></div>
+<button onclick="sw('s1','s2')" class="btn-c">بدء اللعب</button>
+</div>
+<div id="s2" class="w-full max-w-md glass p-6 hidden">
+<h2 class="text-2xl font-bold mb-6 text-[#2dd4bf]">اختر القسم</h2>
+<div class="grid grid-cols-2 gap-4"><button onclick="st('طعام')" class="bg-gray-800 p-4 rounded-xl">طعام 🍕</button><button onclick="st('حيوانات')" class="bg-gray-800 p-4 rounded-xl">حيوانات 🦁</button><button onclick="st('أماكن')" class="bg-gray-800 p-4 rounded-xl">أماكن 🏠</button><button onclick="st('وظائف')" class="bg-gray-800 p-4 rounded-xl">وظائف 👨‍⚕️</button></div>
+</div>
+<div id="s3" class="w-full max-w-md hidden">
+<h2 class="text-xl mb-4 text-[#2dd4bf]">اللاعب <span id="cp">1</span></h2><button onclick="sh()" class="btn-c">رؤية بطاقتي</button>
+</div>
+<div id="s4" class="w-full max-w-md hidden">
+<div id="card" class="min-h-[250px] flex flex-col items-center justify-center glass p-6 mb-6"></div><button onclick="nx()" class="btn-c">أخفِ ومرر</button>
+</div>
+<div id="s5" class="w-full max-w-md glass p-6 hidden">
+<i class="fa-solid fa-clock text-5xl mb-4 text-[#2dd4bf]"></i><h2 class="text-2xl font-black mb-4">وقت النقاش</h2>
+<p class="text-gray-400 mb-8">ابدأوا بالأسئلة الآن!</p><button onclick="location.reload()" class="btn-c bg-red-600 text-white">إنهاء اللعبة</button>
+</div>
+<script>
+const db={"طعام":["بيتزا","شاورما","برجر","كباب"],"حيوانات":["أسد","صقر","قطة","جمل"],"أماكن":["مدرسة","مستشفى","مطار","مطعم"],"وظائف":["طبيب","مهندس","طيار","معلم"]};
+let ps=4,cw="",pr={},vo=[],px=0;
+function vP(v){ps=Math.max(3,Math.min(10,ps+v));document.getElementById('pC').innerText=ps}
+function sw(h,s){document.getElementById(h).classList.add('hidden');document.getElementById(s).classList.remove('hidden')}
+function st(c){let w=db[c];cw=w[Math.floor(Math.random()*w.length)];let r=Array(ps).fill('مواطن');r[0]='جاسوس';r.sort(()=>Math.random()-0.5);vo=Array.from({length:ps},(v,i)=>i+1).sort(()=>Math.random()-0.5);for(let i=0;i<ps;i++)pr[vo[i]]=r[i];up();sw('s2','s3')}
+function up(){document.getElementById('cp').innerText=vo[px]}
+function sh(){const e=document.getElementById('card');if(pr[vo[px]]==='جاسوس')e.innerHTML='<i class="fa-solid fa-user-secret text-7xl mb-4"></i><h2 class="text-3xl font-black">أنت جاسوس</h2>';else e.innerHTML=`<i class="fa-solid fa-check-circle text-7xl mb-4 text-[#2dd4bf]"></i><h2 class="text-4xl font-black">${cw}</h2>`;sw('s3','s4')}
+function nx(){px++;if(px<ps){up();sw('s4','s3')}else{sw('s4','s5')}}
+</script>
 </body>
 </html>
