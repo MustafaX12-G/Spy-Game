@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>لعبة الجاسوس - الاحترافية الشاملة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+        body { font-family: 'Cairo', sans-serif; background-color: #0b0f19; color: #f8fafc; user-select: none; overflow-x: hidden; }
+        .glass-panel { background: rgba(20, 27, 45, 0.95); border: 1px solid rgba(45, 212, 191, 0.2); border-radius: 24px; }
+        .btn-cyan { background: #2dd4bf; color: #0b0f19; transition: transform 0.1s; }
+        .btn-cyan:active { transform: scale(0.95); }
+        .btn-dark { background: #1f2937; color: #fff; transition: transform 0.1s; border: 1px solid #374151; }
+        .btn-dark:active { transform: scale(0.95); }
+        .hidden-view { display: none !important; }
+        .icon-massive { font-size: 140px; text-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        .spy-mask { filter: drop-shadow(0 0 15px rgba(255,255,255,0.3)); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div id="setup-screen" class="w-full max-w-md glass-panel p-6 text-center shadow-2xl">
+        <i class="fa-solid fa-user-secret text-6xl text-white mb-4 spy-mask"></i>
+        <h1 class="text-3xl font-black mb-6 text-white">الجاسوس</h1>
+        
+        <div id="scoresContainer" class="bg-gray-900 rounded-xl p-3 mb-6 border border-gray-800 flex flex-wrap justify-center gap-2 text-sm font-bold"></div>
+
+        <div class="mb-4 bg-gray-900 p-4 rounded-xl border border-gray-800">
+            <label class="block text-sm mb-3 font-bold text-[#2dd4bf]">عدد اللاعبين (3 - 10)</label>
+            <div class="flex justify-center items-center gap-6">
+                <button onclick="changeSettings('players', -1)" class="btn-dark w-12 h-12 rounded-lg text-2xl font-bold">-</button>
+                <span id="playerCount" class="text-3xl font-black w-12 text-white">4</span>
+                <button onclick="changeSettings('players', 1)" class="btn-dark w-12 h-12 rounded-lg text-2xl font-bold">+</button>
+            </div>
+        </div>
+
+        <div class="mb-4 bg-gray-900 p-4 rounded-xl border border-gray-800">
+            <label class="block text-sm mb-3 font-bold text-[#2dd4bf]">عدد الجواسيس (1 - 3)</label>
+            <div class="flex justify-center items-center gap-6">
+                <button onclick="changeSettings('spies', -1)" class="btn-dark w-12 h-12 rounded-lg text-2xl font-bold">-</button>
+                <span id="spyCount" class="text-3xl font-black w-12 text-white">1</span>
+                <button onclick="changeSettings('spies', 1)" class="btn-dark w-12 h-12 rounded-lg text-2xl font-bold">+</button>
+            </div>
+        </div>
+
+        <div class="mb-6 bg-gray-900 p-4 rounded-xl border border-gray-800">
+            <label class="block text-sm mb-3 font-bold text-[#2dd4bf]">وقت الجولة</label>
+            <div class="grid grid-cols-4 gap-2">
+                <button onclick="setTimerOption(3)" id="btn-t-3" class="btn-dark py-2 rounded-lg font-bold">3 د</button>
+                <button onclick="setTimerOption(5)" id="btn-t-5" class="btn-cyan py-2 rounded-lg font-bold">5 د</button>
+                <button onclick="setTimerOption(7)" id="btn-t-7" class="btn-dark py-2 rounded-lg font-bold">7 د</button>
+                <button onclick="setTimerOption(10)" id="btn-t-10" class="btn-dark py-2 rounded-lg font-bold">10 د</button>
+            </div>
+        </div>
+
+        <button onclick="showCategories()" class="btn-cyan w-full py-4 rounded-xl text-xl font-black">التالي</button>
+    </div>
+
+    <div id="category-screen" class="w-full max-w-md glass-panel p-6 text-center shadow-2xl hidden-view">
+        <h2 class="text-2xl font-black mb-6 text-[#2dd4bf]">اختر المهمة</h2>
+        
+        <button onclick="startGame('عشوائي')" class="bg-indigo-900 border border-indigo-500 text-white w-full py-4 rounded-xl text-lg font-bold mb-4 flex items-center justify-center gap-3 transition-transform active:scale-95">
+            <i class="fa-solid fa-dice text-2xl"></i> خلط عشوائي
+        </button>
+
+        <div class="grid grid-cols-2 gap-3" id="categories-container"></div>
+        <button onclick="switchScreen('category-screen', 'setup-screen')" class="mt-6 text-gray-400 font-bold hover:text-white">🔙 عودة</button>
+    </div>
+
+    <div id="pass-screen" class="w-full max-w-md p-6 text-center hidden-view flex flex-col justify-center min-h-[500px]">
+        <h2 class="text-xl font-bold mb-2 text-[#2dd4bf]">اللاعب <span id="currentPlayerNumDisplay">1</span> من <span id="totalPlayersDisplay">4</span></h2>
+        <div class="flex-grow flex items-center justify-center">
+            <button onclick="showCard()" class="btn-cyan w-full py-5 rounded-xl text-2xl font-black shadow-lg">رؤية بطاقتي</button>
+        </div>
+    </div>
+
+    <div id="card-screen" class="w-full max-w-md p-6 text-center hidden-view flex flex-col items-center justify-center min-h-[500px]">
+        <div id="cardContent" class="w-full flex-grow flex flex-col items-center justify-center"></div>
+        <button onclick="hideCard()" class="btn-cyan w-full py-4 rounded-xl text-xl font-black mt-8">أخفِ ومرر</button>
+    </div>
+
+    <div id="timer-screen" class="w-full max-w-md glass-panel p-6 text-center shadow-2xl hidden-view">
+        <div class="bg-gray-900 p-4 rounded-xl mb-6 border border-gray-800">
+            <h2 class="text-sm font-bold mb-2 text-gray-400">الذي يبدأ بالسؤال:</h2>
+            <div id="starterPlayerNum" class="text-3xl font-black text-[#2dd4bf]">اللاعب 1</div>
+        </div>
+        
+        <div class="text-7xl font-black text-white mb-8 font-mono" id="timerDisplay">05:00</div>
+        
+        <div class="grid grid-cols-2 gap-4">
+            <button onclick="toggleTimer()" id="pauseBtn" class="btn-dark p-4 rounded-xl font-bold text-lg">إيقاف ⏸️</button>
+            <button onclick="goToVoting()" class="bg-red-600 text-white p-4 rounded-xl font-bold text-lg transition-transform active:scale-95">إنهاء وتصويت</button>
+        </div>
+    </div>
+
+    <div id="voting-screen" class="w-full max-w-md glass-panel p-6 text-center shadow-2xl hidden-view">
+        <h2 class="text-2xl font-black mb-2 text-[#2dd4bf]">وقت التصويت!</h2>
+        <p class="text-gray-400 mb-6 text-sm">صوتوا على الشخص المشتبه به</p>
+        <div id="voting-buttons" class="grid grid-cols-2 gap-3 mb-6"></div>
+    </div>
+
+    <div id="result-screen" class="w-full max-w-md glass-panel p-6 text-center shadow-2xl hidden-view">
+        <i id="result-icon" class="fa-solid text-7xl mb-4"></i>
+        <h2 id="result-title" class="text-3xl font-black mb-2"></h2>
+        <p id="result-desc" class="text-lg text-gray-300 font-bold mb-6"></p>
+        <div class="bg-gray-900 p-4 rounded-xl mb-8 border border-gray-800 text-center" id="spies-reveal"></div>
+        <button onclick="resetForNextRound()" class="btn-cyan w-full py-4 rounded-xl text-xl font-black">بدء جولة جديدة</button>
+    </div>
+
+    <script>
+        // قاعدة البيانات الشاملة (40 كلمة لكل قسم - المجموع 280)
+        const database = {
+            "طعام": { icon: "fa-burger", words: [
+                {n:"شوربة", i:"fa-bowl-food"}, {n:"بيتزا", i:"fa-pizza-slice"}, {n:"برجر", i:"fa-burger"}, 
+                {n:"آيس كريم", i:"fa-ice-cream"}, {n:"تفاح", i:"fa-apple-whole"}, {n:"جبن", i:"fa-cheese"}, 
+                {n:"قهوة", i:"fa-mug-hot"}, {n:"كيك", i:"fa-cake-candles"}, {n:"لحم مشوي", i:"fa-bone"}, 
+                {n:"سمكة", i:"fa-fish"}, {n:"جزر", i:"fa-carrot"}, {n:"ليمون", i:"fa-lemon"},
+                {n:"هوت دوج", i:"fa-hotdog"}, {n:"بيضة", i:"fa-egg"}, {n:"خبز", i:"fa-bread-slice"}, 
+                {n:"أرز", i:"fa-bowl-rice"}, {n:"دجاج مقلي", i:"fa-drumstick-bite"}, {n:"شوكولاتة", i:"fa-cookie"},
+                {n:"فراولة", i:"fa-leaf"}, {n:"موز", i:"fa-lemon"}, {n:"بطيخ", i:"fa-lemon"}, 
+                {n:"عنب", i:"fa-leaf"}, {n:"طماطم", i:"fa-apple-whole"}, {n:"بطاطا", i:"fa-seedling"},
+                {n:"بصل", i:"fa-seedling"}, {n:"شاي", i:"fa-mug-saucer"}, {n:"عصير", i:"fa-glass-water"}, 
+                {n:"حليب", i:"fa-jug-detergent"}, {n:"سلطة", i:"fa-leaf"}, {n:"بسكويت", i:"fa-cookie-bite"},
+                {n:"كباب", i:"fa-utensils"}, {n:"شاورما", i:"fa-utensils"}, {n:"فطيرة", i:"fa-pie-chart"}, 
+                {n:"سوشي", i:"fa-fish-fins"}, {n:"مكرونة", i:"fa-bowl-food"}, {n:"دونات", i:"fa-circle-notch"},
+                {n:"عسل", i:"fa-jar"}, {n:"مكسرات", i:"fa-seedling"}, {n:"تمر", i:"fa-seedling"}, {n:"شيبس", i:"fa-bag-shopping"}
+            ]},
+            "أشياء": { icon: "fa-box-open", words: [
+                {n:"مطرقة", i:"fa-hammer"}, {n:"مفك", i:"fa-screwdriver"}, {n:"مفتاح", i:"fa-key"}, 
+                {n:"قفل", i:"fa-lock"}, {n:"نظارات", i:"fa-glasses"}, {n:"حقيبة", i:"fa-suitcase"}, 
+                {n:"كاميرا", i:"fa-camera"}, {n:"تلفزيون", i:"fa-tv"}, {n:"لابتوب", i:"fa-laptop"}, 
+                {n:"قلم", i:"fa-pen"}, {n:"مقص", i:"fa-scissors"}, {n:"ملعقة", i:"fa-spoon"},
+                {n:"سكين", i:"fa-utensils"}, {n:"سرير", i:"fa-bed"}, {n:"كرسي", i:"fa-chair"}, 
+                {n:"طاولة", i:"fa-table"}, {n:"باب", i:"fa-door-closed"}, {n:"نافذة", i:"fa-border-all"},
+                {n:"كتاب", i:"fa-book"}, {n:"دفتر", i:"fa-book-open"}, {n:"هاتف", i:"fa-mobile"}, 
+                {n:"ساعة يد", i:"fa-clock"}, {n:"ساعة حائط", i:"fa-stopwatch"}, {n:"مظلة", i:"fa-umbrella"},
+                {n:"محفظة", i:"fa-wallet"}, {n:"كيس", i:"fa-bag-shopping"}, {n:"حذاء", i:"fa-shoe-prints"}, 
+                {n:"قميص", i:"fa-shirt"}, {n:"بنطال", i:"fa-user-tie"}, {n:"قبعة", i:"fa-hat-cowboy"},
+                {n:"فرشاة", i:"fa-brush"}, {n:"مشط", i:"fa-teeth"}, {n:"مرآة", i:"fa-circle"}, 
+                {n:"مصباح", i:"fa-lightbulb"}, {n:"مصباح يدوي", i:"fa-flashlight"}, {n:"بطارية", i:"fa-battery-full"},
+                {n:"شاحن", i:"fa-plug"}, {n:"سماعات", i:"fa-headphones"}, {n:"ميكروفون", i:"fa-microphone"}, {n:"جيتار", i:"fa-guitar"}
+            ]},
+            "أماكن": { icon: "fa-earth-americas", words: [
+                {n:"مستشفى", i:"fa-hospital"}, {n:"مدرسة", i:"fa-school"}, {n:"مطار", i:"fa-plane-departure"}, 
+                {n:"فندق", i:"fa-hotel"}, {n:"مسجد", i:"fa-mosque"}, {n:"مخيم", i:"fa-campground"}, 
+                {n:"مدينة", i:"fa-city"}, {n:"منزل", i:"fa-house"}, {n:"مبنى", i:"fa-building"},
+                {n:"مقهى", i:"fa-mug-saucer"}, {n:"مطعم", i:"fa-utensils"}, {n:"جامعة", i:"fa-graduation-cap"},
+                {n:"مكتبة", i:"fa-book-reader"}, {n:"حديقة", i:"fa-tree"}, {n:"شاطئ", i:"fa-umbrella-beach"}, 
+                {n:"جبل", i:"fa-mountain"}, {n:"صحراء", i:"fa-sun"}, {n:"جزيرة", i:"fa-water"},
+                {n:"بحر", i:"fa-water"}, {n:"نهر", i:"fa-water"}, {n:"شارع", i:"fa-road"}, 
+                {n:"جسر", i:"fa-bridge"}, {n:"محطة حافلات", i:"fa-bus"}, {n:"محطة قطار", i:"fa-train"},
+                {n:"مول", i:"fa-shop"}, {n:"سوبر ماركت", i:"fa-cart-shopping"}, {n:"صيدلية", i:"fa-prescription-bottle-medical"}, 
+                {n:"بنك", i:"fa-building-columns"}, {n:"بريد", i:"fa-envelope"}, {n:"مركز شرطة", i:"fa-building-shield"},
+                {n:"محطة إطفاء", i:"fa-fire-extinguisher"}, {n:"محكمة", i:"fa-scale-balanced"}, {n:"سجن", i:"fa-dungeon"}, 
+                {n:"ملعب", i:"fa-futbol"}, {n:"نادي رياضي", i:"fa-dumbbell"}, {n:"متحف", i:"fa-building-columns"},
+                {n:"مسرح", i:"fa-masks-theater"}, {n:"سينما", i:"fa-film"}, {n:"مخبز", i:"fa-shop"}, {n:"مصنع", i:"fa-industry"}
+            ]},
+            "وظائف": { icon: "fa-briefcase", words: [
+                {n:"طبيب", i:"fa-user-doctor"}, {n:"شرطي", i:"fa-user-shield"}, {n:"رائد فضاء", i:"fa-user-astronaut"}, 
+                {n:"محقق", i:"fa-user-secret"}, {n:"ممرضة", i:"fa-user-nurse"}, {n:"قاضي", i:"fa-gavel"},
+                {n:"طباخ", i:"fa-utensils"}, {n:"عالم", i:"fa-flask"}, {n:"معلم", i:"fa-chalkboard-user"},
+                {n:"طالب", i:"fa-user-graduate"}, {n:"مهندس", i:"fa-helmet-safety"}, {n:"مبرمج", i:"fa-laptop-code"},
+                {n:"مصمم", i:"fa-pen-nib"}, {n:"رسام", i:"fa-palette"}, {n:"موسيقي", i:"fa-music"}, 
+                {n:"كاتب", i:"fa-pen-fancy"}, {n:"صحفي", i:"fa-newspaper"}, {n:"مصور", i:"fa-camera"},
+                {n:"مزارع", i:"fa-tractor"}, {n:"طيار", i:"fa-plane"}, {n:"سائق", i:"fa-car"}, 
+                {n:"بحار", i:"fa-ship"}, {n:"جندي", i:"fa-person-military-rifle"}, {n:"إطفائي", i:"fa-fire-extinguisher"},
+                {n:"محامي", i:"fa-scale-balanced"}, {n:"محاسب", i:"fa-calculator"}, {n:"موظف بنك", i:"fa-money-bill"}, 
+                {n:"محاسب متجر", i:"fa-cash-register"}, {n:"بائع", i:"fa-shop"}, {n:"حلاق", i:"fa-scissors"},
+                {n:"ميكانيكي", i:"fa-wrench"}, {n:"سباك", i:"fa-wrench"}, {n:"نجار", i:"fa-hammer"}, 
+                {n:"كهربائي", i:"fa-plug"}, {n:"عامل نظافة", i:"fa-broom"}, {n:"حارس", i:"fa-shield"},
+                {n:"رياضي", i:"fa-person-running"}, {n:"ممثل", i:"fa-masks-theater"}, {n:"مخرج", i:"fa-clapperboard"}, {n:"سياسي", i:"fa-bullhorn"}
+            ]},
+            "حيوانات": { icon: "fa-paw", words: [
+                {n:"قطة", i:"fa-cat"}, {n:"كلب", i:"fa-dog"}, {n:"حصان", i:"fa-horse"}, 
+                {n
