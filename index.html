@@ -36,19 +36,83 @@
     <div id="timer-screen" class="hidden-view"></div>
     <div id="voting-screen" class="hidden-view"></div>
     <div id="result-screen" class="hidden-view"></div>
+    <div id="category-screen" class="w-full max-w-md glass-panel p-6 text-center shadow-2xl hidden-view">
+        <h2 class="text-2xl font-black mb-6 text-[#2dd4bf]">اختر المهمة</h2>
+        <div class="grid grid-cols-2 gap-3" id="categories-container"></div>
+    </div>
+
+    <div id="pass-screen" class="w-full max-w-md p-6 text-center hidden-view flex flex-col justify-center min-h-[500px]">
+        <h2 class="text-xl font-bold mb-2 text-[#2dd4bf]">اللاعب <span id="currentPlayerNumDisplay">1</span></h2>
+        <button onclick="showCard()" class="btn-cyan w-full py-5 rounded-xl text-2xl font-black">رؤية بطاقتي</button>
+    </div>
+
+    <div id="card-screen" class="w-full max-w-md p-6 text-center hidden-view flex flex-col items-center justify-center min-h-[500px]">
+        <div id="cardContent" class="w-full flex-grow flex flex-col items-center justify-center"></div>
+        <button onclick="hideCard()" class="btn-cyan w-full py-4 rounded-xl mt-8">أخفِ ومرر</button>
+    </div>
+
     <script>
-        // هنا نضع الأوامر التي تجعل الأزرار تعمل
-        let players = 4, spies = 1, scores = Array(10).fill(0);
+        // برمجة الأزرار والكلمات
+        const database = {
+            "طعام": [{n:"بيتزا", i:"fa-pizza-slice"}, {n:"برجر", i:"fa-burger"}],
+            "حيوانات": [{n:"أسد", i:"fa-cat"}, {n:"نمر", i:"fa-cat"}]
+        };
+        let players = 4, currentPassIndex = 0, viewOrder = [], playerRoles = {}, currentWord = {};
+
         function changeSettings(type, val) {
-            if (type === 'players') players = Math.max(3, Math.min(10, players + val));
+            players = Math.max(3, Math.min(10, players + val));
             document.getElementById('playerCount').innerText = players;
         }
+
         function showCategories() {
-            alert("تم تفعيل النظام بنجاح! جاري تحميل الكلمات...");
-            // ملاحظة: يمكنك الآن إضافة الكلمات يدوياً هنا
-            location.reload(); 
+            const container = document.getElementById('categories-container');
+            container.innerHTML = '';
+            for (let cat in database) {
+                let btn = document.createElement('button');
+                btn.className = 'bg-gray-900 border border-gray-700 py-4 rounded-xl text-white font-bold';
+                btn.innerText = cat;
+                btn.onclick = () => startGame(cat);
+                container.appendChild(btn);
+            }
+            document.getElementById('setup-screen').classList.add('hidden-view');
+            document.getElementById('category-screen').classList.remove('hidden-view');
         }
-        // ... باقي الأكواد البرمجية ...
+
+        function startGame(cat) {
+            currentWord = database[cat][Math.floor(Math.random() * database[cat].length)];
+            let roles = Array(players).fill('مواطن');
+            roles[0] = 'جاسوس';
+            roles.sort(() => Math.random() - 0.5);
+            viewOrder = Array.from({length: players}, (_, i) => i + 1);
+            for(let i=0; i<players; i++) playerRoles[viewOrder[i]] = roles[i];
+            currentPassIndex = 0;
+            document.getElementById('currentPlayerNumDisplay').innerText = viewOrder[currentPassIndex];
+            document.getElementById('category-screen').classList.add('hidden-view');
+            document.getElementById('pass-screen').classList.remove('hidden-view');
+        }
+
+        function showCard() {
+            const content = document.getElementById('cardContent');
+            const role = playerRoles[viewOrder[currentPassIndex]];
+            if (role === 'جاسوس') {
+                content.innerHTML = '<i class="fa-solid fa-user-secret text-8xl mb-4"></i><h2 class="text-4xl font-black">أنت الجاسوس</h2>';
+            } else {
+                content.innerHTML = `<i class="fa-solid ${currentWord.i} text-8xl mb-4 text-[#2dd4bf]"></i><h2 class="text-4xl font-black">${currentWord.n}</h2>`;
+            }
+            document.getElementById('pass-screen').classList.add('hidden-view');
+            document.getElementById('card-screen').classList.remove('hidden-view');
+        }
+
+        function hideCard() {
+            currentPassIndex++;
+            if (currentPassIndex < players) {
+                document.getElementById('currentPlayerNumDisplay').innerText = viewOrder[currentPassIndex];
+                document.getElementById('card-screen').classList.add('hidden-view');
+                document.getElementById('pass-screen').classList.remove('hidden-view');
+            } else {
+                location.reload(); // إعادة البداية مؤقتاً
+            }
+        }
     </script>
 </body>
 </html>
