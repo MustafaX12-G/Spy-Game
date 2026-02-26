@@ -2,65 +2,77 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>لعبة الجاسوس الاحترافية</title>
+<title>لعبة الجاسوس - النسخة الكاملة</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap');
 body { font-family: 'Cairo', sans-serif; background-color: #0b0f19; color: #fff; user-select: none; overflow: hidden; }
-.glass { background: rgba(20, 27, 45, 0.98); border: 1px solid #2dd4bf33; border-radius: 24px; }
-.btn-c { background: #2dd4bf; color: #0b0f19; font-weight: 900; padding: 18px; border-radius: 15px; width: 100%; transition: 0.2s; }
+.glass { background: rgba(20, 27, 45, 0.98); border: 1px solid #2dd4bf33; border-radius: 24px; padding: 25px; }
+.btn-c { background: #2dd4bf; color: #0b0f19; font-weight: 900; padding: 18px; border-radius: 15px; width: 100%; transition: 0.2s; border: none; cursor: pointer; }
 .btn-c:active { transform: scale(0.95); }
 .hidden { display: none !important; }
+.card-icon { font-size: 80px; margin-bottom: 20px; color: #2dd4bf; }
 </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4 text-center">
-<div id="s1" class="w-full max-w-md glass p-6">
-<i class="fa-solid fa-user-secret text-6xl mb-4 text-white"></i><h1 class="text-3xl font-black mb-8">الجاسوس</h1>
-<div class="bg-gray-900 p-4 rounded-xl mb-6 border border-gray-800">
-<p class="text-[#2dd4bf] text-sm mb-3">عدد اللاعبين</p>
-<div class="flex justify-center items-center gap-8">
-<button onclick="vP(-1)" class="w-12 h-12 bg-gray-800 rounded-lg text-2xl">-</button>
-<span id="pC" class="text-4xl font-black w-12">4</span>
-<button onclick="vP(1)" class="w-12 h-12 bg-gray-800 rounded-lg text-2xl">+</button>
-</div></div>
-<button onclick="sw('s1','s2')" class="btn-c text-xl">التالي</button>
+
+<div id="s1" class="w-full max-w-md glass">
+    <i class="fa-solid fa-user-secret text-6xl mb-4"></i><h1 class="text-3xl font-black mb-8">الجاسوس</h1>
+    <div class="bg-gray-900 p-4 rounded-xl mb-6 border border-gray-800">
+        <p class="text-[#2dd4bf] text-sm mb-3 font-bold">عدد اللاعبين</p>
+        <div class="flex justify-center items-center gap-8">
+            <button onclick="vP(-1)" class="w-12 h-12 bg-gray-800 rounded-lg text-2xl">-</button>
+            <span id="pC" class="text-4xl font-black w-12">4</span>
+            <button onclick="vP(1)" class="w-12 h-12 bg-gray-800 rounded-lg text-2xl">+</button>
+        </div>
+    </div>
+    <button onclick="sw('s1','s2')" class="btn-c text-xl">ابدأ المهمة</button>
 </div>
-<div id="s2" class="w-full max-w-md glass p-6 hidden">
-<h2 class="text-2xl font-black mb-6 text-[#2dd4bf]">اختر القسم</h2>
-<div class="grid grid-cols-2 gap-4" id="catG"></div>
-<button onclick="sw('s2','s1')" class="mt-6 text-gray-500 font-bold">عودة</button>
+
+<div id="s2" class="w-full max-w-md glass hidden">
+    <h2 class="text-2xl font-black mb-6 text-[#2dd4bf]">اختر القسم</h2>
+    <div class="grid grid-cols-2 gap-4" id="catG"></div>
+    <button onclick="sw('s2','s1')" class="mt-6 text-gray-500 font-bold">عودة للإعدادات</button>
 </div>
+
 <div id="s3" class="w-full max-w-md hidden">
-<p class="text-[#2dd4bf] mb-2 font-bold">دور اللاعب</p>
-<h2 class="text-5xl font-black mb-10" id="cp">1</h2>
-<button onclick="sh()" class="btn-c text-2xl shadow-lg shadow-cyan-900/20">رؤية بطاقتي</button>
+    <p class="text-[#2dd4bf] mb-2 font-bold text-xl">دور اللاعب</p>
+    <h2 class="text-7xl font-black mb-12" id="cp">1</h2>
+    <button onclick="sh()" class="btn-c text-2xl shadow-xl shadow-cyan-900/40">رؤية بطاقتي</button>
 </div>
+
 <div id="s4" class="w-full max-w-md hidden">
-<div id="card" class="min-h-[350px] flex flex-col items-center justify-center glass p-8 mb-8"></div>
-<button onclick="nx()" class="btn-c text-xl">أخفِ ومرر للهاتف</button>
+    <div id="card" class="min-h-[400px] flex flex-col items-center justify-center glass mb-8"></div>
+    <button onclick="nx()" class="btn-c text-xl">تم (أخفِ ومرر)</button>
 </div>
-<div id="s5" class="w-full max-w-md glass p-8 hidden">
-<div class="text-gray-400 mb-2">الذي يبدأ السؤال هو اللاعب: <span id="st" class="text-[#2dd4bf] font-black"></span></div>
-<div class="text-7xl font-black mb-10 font-mono" id="td">05:00</div>
-<button onclick="location.reload()" class="btn-c bg-red-600 text-white">إنهاء وتصويت</button>
+
+<div id="s5" class="w-full max-w-md glass hidden">
+    <div class="text-gray-400 mb-2 font-bold">المحقق الأول: اللاعب <span id="st" class="text-[#2dd4bf]"></span></div>
+    <div class="text-7xl font-black mb-10 font-mono text-white" id="td">05:00</div>
+    <div class="grid grid-cols-2 gap-4">
+        <button onclick="pT()" id="pb" class="bg-gray-800 p-4 rounded-xl font-bold">إيقاف</button>
+        <button onclick="location.reload()" class="bg-red-600 p-4 rounded-xl font-bold">إنهاء اللعبة</button>
+    </div>
 </div>
+
 <script>
 const db={
-"طعام":{i:"fa-pizza-slice",w:["بيتزا","شاورما","برجر","كباب","منسف","سمك","تبولة","فلافل"]},
-"حيوانات":{i:"fa-paw",w:["أسد","نمر","صقر","جمل","فيل","ذئب","غزال","قطة"]},
-"أماكن":{i:"fa-map-location-dot",w:["مدرسة","مستشفى","مطار","مول","حديقة","مطعم","مقهى","منزل"]},
-"وظائف":{i:"fa-briefcase",w:["طبيب","مهندس","طيار","معلم","شرطي","محامي","نجار","حلاق"]}
+"طعام":{i:"fa-pizza-slice",w:["بيتزا","شاورما","برجر","كباب","سوشي","تاكو","باستا","ستيك","نودلز","مندي","كوشري","فلافل","حمص","سمك","جمبري","ورق عنب","متبل","فتوش","كبة","سمبوسة","تندوري","رز بخاري","برياني","مسحب","هوت دوغ","دونات","وافل","بان كيك","أومليت","كرواسون","شوربة عدس","لازانيا","فوتوشيني","محشي","ملوخية","مقلوبة","بخاري","كنافة","بسبوسة","آيس كريم"]},
+"أماكن":{i:"fa-map-location-dot",w:["مدرسة","مستشفى","مطار","مول","حديقة","مطعم","مقهى","منزل","فندق","بنك","سينما","مسرح","متحف","ملعب","نادي","غابة","صحراء","شاطئ","مسبح","جامعة","مكتبة","صيدلية","مخبز","محطة قطار","ميناء","سفارة","قصر","قلعة","سجن","مركز شرطة","إطفاء","محطة وقود","سوبر ماركت","صالون","خيمة","مخيم","جزيرة","جبل","كهف","شلال"]},
+"حيوانات":{i:"fa-paw",w:["أسد","نمر","فهد","ذئب","ثعلب","كلب","قطة","أرنب","فأر","سنجاب","قرد","غوريلا","فيل","زرافة","حمار وحشي","حصان","حمار","بقرة","خروف","ماعز","جمل","دب","بطريق","حوت","دلفين","قرش","أخطبوط","سلحفاة","تمساح","ثعبان","نسر","صقر","بومة","ببغاء","حمامة","بطة","دجاجة","غراب","عصفور","نحلة"]},
+"وظائف":{i:"fa-briefcase",w:["طبيب","مهندس","طيار","معلم","شرطي","محامي","نجار","حلاق","خياط","طباخ","نادل","ميكانيكي","كهربائي","سباك","سائق","طيار","مضيف","صحفي","رسام","مصور","لاعب","مدرب","مزارع","صياد","عامل","بائع","محاسب","مدير","سكرتير","قاضي","ضابط","جندي","غطاس","رائد فضاء","عالم","مبرمج","مصمم","محلل","كاتب","شاعر"]}
 };
-let ps=4,cw="",pr={},vo=[],px=0,ti,tl=300;
+let ps=4,cw="",pr={},vo=[],px=0,ti,tl=300,ip=false;
 function vP(v){ps=Math.max(3,Math.min(10,ps+v));document.getElementById('pC').innerText=ps}
 function sw(h,s){document.getElementById(h).classList.add('hidden');document.getElementById(s).classList.remove('hidden');if(s==='s2')renderCats()}
 function renderCats(){const g=document.getElementById('catG');g.innerHTML='';for(let c in db){let b=document.createElement('button');b.className='bg-gray-800 p-6 rounded-2xl border border-gray-700 active:border-[#2dd4bf]';b.innerHTML=`<i class="fa-solid ${db[c].i} text-3xl mb-3 text-[#2dd4bf]"></i><br><span class="font-bold">${c}</span>`;b.onclick=()=>st(c);g.appendChild(b)}}
-function st(c){const words=db[c].w;cw=words[Math.floor(Math.random()*words.length)];let r=Array(ps).fill('مواطن');r[0]='جاسوس';r.sort(()=>Math.random()-0.5);vo=Array.from({length:ps},(v,i)=>i+1).sort(()=>Math.random()-0.5);for(let i=0;i<ps;i++)pr[vo[i]]=r[i];up();sw('s2','s3')}
+function st(c){const words=db[c].w;cw=words[Math.floor(Math.random()*words.length)];let r=Array(ps).fill('مواطن');r[0]='جاسوس';r.sort(()=>Math.random()-0.5);vo=Array.from({length:ps},(v,i)=>i+1).sort(()=>Math.random()-0.5);for(let i=0;i<ps;i++)pr[vo[i]]=r[i];px=0;up();sw('s2','s3')}
 function up(){document.getElementById('cp').innerText=vo[px]}
-function sh(){const e=document.getElementById('card');if(pr[vo[px]]==='جاسوس')e.innerHTML='<i class="fa-solid fa-user-secret text-8xl mb-6 text-white"></i><h2 class="text-4xl font-black">أنت جاسوس</h2><p class="mt-4 text-gray-400">حاول معرفة الكلمة!</p>';else e.innerHTML=`<i class="fa-solid fa-check-double text-7xl mb-6 text-[#2dd4bf]"></i><h2 class="text-5xl font-black">${cw}</h2>`;sw('s3','s4')}
+function sh(){const e=document.getElementById('card');if(pr[vo[px]]==='جاسوس')e.innerHTML='<i class="fa-solid fa-user-secret card-icon text-white"></i><h2 class="text-4xl font-black">أنت جاسوس</h2><p class="mt-4 text-gray-400">لا تدعهم يشعرون بك!</p>';else e.innerHTML=`<i class="fa-solid ${db[Object.keys(db).find(k=>db[k].w.includes(cw))].i} card-icon"></i><h3 class="text-xl text-[#2dd4bf] mb-2 font-bold">المهمة</h3><h2 class="text-5xl font-black">${cw}</h2>`;sw('s3','s4')}
 function nx(){px++;if(px<ps){up();sw('s4','s3')}else{startTimer()}}
-function startTimer(){document.getElementById('st').innerText=Math.floor(Math.random()*ps)+1;tl=300;ti=setInterval(()=>{tl--;let m=Math.floor(tl/60),s=tl%60;document.getElementById('td').innerText=`${m}:${s<10?'0':''}${s}`;if(tl<=0)clearInterval(ti)},1000);sw('s4','s5')}
+function startTimer(){document.getElementById('st').innerText=Math.floor(Math.random()*ps)+1;ti=setInterval(()=>{if(!ip){tl--;let m=Math.floor(tl/60),s=tl%60;document.getElementById('td').innerText=`${m}:${s<10?'0':''}${s}`;if(tl<=0)clearInterval(ti)}},1000);sw('s4','s5')}
+function pT(){ip=!ip;document.getElementById('pb').innerText=ip?'استئناف':'إيقاف'}
 </script>
 </body>
 </html>
