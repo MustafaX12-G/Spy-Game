@@ -110,7 +110,7 @@
     </div>
 
     <script>
-        // قاعدة البيانات الشاملة (40 كلمة لكل قسم - المجموع 280)
+        // قاعدة البيانات الشاملة
         const database = {
             "طعام": { icon: "fa-burger", words: [
                 {n:"شوربة", i:"fa-bowl-food"}, {n:"بيتزا", i:"fa-pizza-slice"}, {n:"برجر", i:"fa-burger"}, 
@@ -174,4 +174,155 @@
             ]},
             "حيوانات": { icon: "fa-paw", words: [
                 {n:"قطة", i:"fa-cat"}, {n:"كلب", i:"fa-dog"}, {n:"حصان", i:"fa-horse"}, 
-                {n
+                {n:"ضفدع", i:"fa-frog"}, {n:"غراب", i:"fa-crow"}, {n:"عنكبوت", i:"fa-spider"},
+                {n:"بقرة", i:"fa-cow"}, {n:"حشرة", i:"fa-bug"}, {n:"سمكة", i:"fa-fish"}, 
+                {n:"حمامة", i:"fa-dove"}, {n:"تنين", i:"fa-dragon"}, {n:"فرس النهر", i:"fa-hippo"},
+                {n:"قندس", i:"fa-otter"}, {n:"دودة", i:"fa-worm"}, {n:"طائر الكيوي", i:"fa-kiwi-bird"}, 
+                {n:"أسد", i:"fa-paw"}, {n:"نمر", i:"fa-paw"}, {n:"فيل", i:"fa-paw"},
+                {n:"قرد", i:"fa-paw"}, {n:"دب", i:"fa-paw"}, {n:"ذئب", i:"fa-paw"}, 
+                {n:"ثعلب", i:"fa-paw"}, {n:"غزال", i:"fa-paw"}, {n:"أرنب", i:"fa-paw"},
+                {n:"فأر", i:"fa-paw"}, {n:"خفاش", i:"fa-paw"}, {n:"خنزير", i:"fa-piggy-bank"}, 
+                {n:"خروف", i:"fa-paw"}, {n:"ماعز", i:"fa-paw"}, {n:"دجاجة", i:"fa-paw"},
+                {n:"بطة", i:"fa-paw"}, {n:"نسر", i:"fa-paw"}, {n:"بومة", i:"fa-paw"}, 
+                {n:"ببغاء", i:"fa-paw"}, {n:"بطريق", i:"fa-paw"}, {n:"ثعبان", i:"fa-paw"},
+                {n:"سلحفاة", i:"fa-paw"}, {n:"قرش", i:"fa-fish"}, {n:"حوت", i:"fa-fish"}, {n:"دلفين", i:"fa-fish"}
+            ]},
+            "رياضة": { icon: "fa-futbol", words: [
+                {n:"كرة قدم", i:"fa-futbol"}, {n:"كرة سلة", i:"fa-basketball"}, {n:"تنس", i:"fa-table-tennis-paddle-ball"}, 
+                {n:"بولينج", i:"fa-bowling-ball"}, {n:"تزلج", i:"fa-person-skating"}, {n:"سباحة", i:"fa-person-swimming"},
+                {n:"ركض", i:"fa-person-running"}, {n:"دراجات", i:"fa-person-biking"}, {n:"تزلج جليد", i:"fa-person-skiing"}, 
+                {n:"تزلج لوح", i:"fa-person-snowboarding"}, {n:"كرة طائرة", i:"fa-volleyball"}, {n:"بيسبول", i:"fa-baseball"},
+                {n:"رجبي", i:"fa-football"}, {n:"جولف", i:"fa-golf-ball-tee"}, {n:"ملاكمة", i:"fa-hand-back-fist"}, 
+                {n:"مصارعة", i:"fa-hand-back-fist"}, {n:"كاراتيه", i:"fa-user-ninja"}, {n:"جودو", i:"fa-user-ninja"},
+                {n:"تايكوندو", i:"fa-user-ninja"}, {n:"مبارزة", i:"fa-khanda"}, {n:"رماية أسهم", i:"fa-bullseye"}, 
+                {n:"رماية بنادق", i:"fa-crosshairs"}, {n:"رفع أثقال", i:"fa-dumbbell"}, {n:"جمباز", i:"fa-child-reaching"},
+                {n:"غطس", i:"fa-person-swimming"}, {n:"تجديف", i:"fa-sailboat"}, {n:"شراع", i:"fa-sailboat"}, 
+                {n:"ركوب أمواج", i:"fa-water"}, {n:"فروسية", i:"fa-horse"}, {n:"سباق سيارات", i:"fa-car-side"},
+                {n:"سباق دراجات نارية", i:"fa-motorcycle"}, {n:"بلياردو", i:"fa-circle"}, {n:"سنوكر", i:"fa-circle"}, 
+                {n:"رمي السهام", i:"fa-bullseye"}, {n:"تنس طاولة", i:"fa-table-tennis-paddle-ball"}, {n:"ريشة طائرة", i:"fa-table-tennis-paddle-ball"},
+                {n:"اسكواش", i:"fa-table-tennis-paddle-ball"}, {n:"هوكي", i:"fa-hockey-puck"}, {n:"هوكي جليد", i:"fa-hockey-puck"}, {n:"كريكت", i:"fa-baseball"}
+            ]},
+            "تطبيقات": { icon: "fa-mobile-screen", words: [
+                {n:"مراسلة", i:"fa-comment-dots"}, {n:"خرائط", i:"fa-map-location-dot"}, {n:"متصفح", i:"fa-globe"}, 
+                {n:"تقويم", i:"fa-calendar-days"}, {n:"حاسبة", i:"fa-calculator"}, {n:"موسيقى", i:"fa-music"},
+                {n:"كاميرا", i:"fa-camera"}, {n:"صور", i:"fa-image"}, {n:"ساعة", i:"fa-clock"}, 
+                {n:"طقس", i:"fa-cloud-sun"}, {n:"ملاحظات", i:"fa-note-sticky"}, {n:"تذكيرات", i:"fa-bell"},
+                {n:"محفظة", i:"fa-wallet"}, {n:"إعدادات", i:"fa-gear"}, {n:"متجر تطبيقات", i:"fa-shop"}, 
+                {n:"تعارف", i:"fa-heart"}, {n:"لغات", i:"fa-language"}, {n:"توصيل طعام", i:"fa-burger"},
+                {n:"لياقة", i:"fa-dumbbell"}, {n:"أخبار", i:"fa-newspaper"}, {n:"كتب", i:"fa-book"}, 
+                {n:"بودكاست", i:"fa-podcast"}, {n:"ألعاب", i:"fa-gamepad"}, {n:"حماية", i:"fa-shield"},
+                {n:"بنوك", i:"fa-building-columns"}, {n:"سفر", i:"fa-plane"}, {n:"صحة", i:"fa-heart-pulse"}, 
+                {n:"ترجمة", i:"fa-language"}, {n:"مسح ضوئي", i:"fa-qrcode"}, {n:"مدير ملفات", i:"fa-folder"},
+                {n:"بوصلة", i:"fa-compass"}, {n:"تسجيل صوت", i:"fa-microphone"}, {n:"كشاف", i:"fa-flashlight"}, 
+                {n:"مكالمات فيديو", i:"fa-video"}, {n:"تواصل اجتماعي", i:"fa-hashtag"}, {n:"بريد إلكتروني", i:"fa-envelope"},
+                {n:"جهات اتصال", i:"fa-address-book"}, {n:"هاتف", i:"fa-phone"}, {n:"رسائل نصية", i:"fa-message"}, {n:"بريد صوتي", i:"fa-voicemail"}
+            ]}
+        };
+
+        let players = 4, spies = 1, timerMinutes = 5;
+        let scores = Array(10).fill(0);
+        let currentWord = {}, currentCategoryName = "";
+        let playerRoles = {}, viewOrder = [], currentPassIndex = 0;
+        let timerInterval, timeLeft = 300, isPaused = false;
+
+        function updateScoresUI() {
+            const container = document.getElementById('scoresContainer');
+            container.innerHTML = '';
+            for(let i=0; i<players; i++) {
+                container.innerHTML += `<div class="flex flex-col items-center p-2"><span class="text-xs text-gray-400">ل${i+1}</span><span class="text-[#2dd4bf]">${scores[i]}</span></div>`;
+            }
+        }
+
+        function changeSettings(type, val) {
+            if (type === 'players') {
+                players = Math.max(3, Math.min(10, players + val));
+                if (spies >= players) spies = Math.max(1, players - 2);
+            } else if (type === 'spies') {
+                spies = Math.max(1, Math.min(3, spies + val));
+                if (spies >= players) spies = players - 1;
+            }
+            document.getElementById('playerCount').innerText = players;
+            document.getElementById('spyCount').innerText = spies;
+            updateScoresUI();
+        }
+
+        function setTimerOption(mins) {
+            timerMinutes = mins;
+            [3,5,7,10].forEach(m => {
+                let btn = document.getElementById(`btn-t-${m}`);
+                if(m === mins) {
+                    btn.className = "btn-cyan py-2 rounded-lg font-bold";
+                } else {
+                    btn.className = "btn-dark py-2 rounded-lg font-bold";
+                }
+            });
+        }
+
+        function switchScreen(hideId, showId) {
+            document.getElementById(hideId).classList.add('hidden-view');
+            document.getElementById(showId).classList.remove('hidden-view');
+        }
+
+        function showCategories() {
+            updateScoresUI();
+            const container = document.getElementById('categories-container');
+            container.innerHTML = '';
+            for (let cat in database) {
+                let btn = document.createElement('button');
+                btn.className = 'bg-gray-900 border border-gray-700 py-4 rounded-xl text-md font-bold text-gray-300 flex flex-col items-center justify-center gap-2 transition-transform active:scale-95 hover:border-[#2dd4bf]';
+                btn.innerHTML = `<i class="fa-solid ${database[cat].icon} text-2xl text-[#2dd4bf]"></i><span>${cat}</span>`;
+                btn.onclick = () => startGame(cat);
+                container.appendChild(btn);
+            }
+            switchScreen('setup-screen', 'category-screen');
+        }
+
+        function startGame(category) {
+            let wordsArray = [];
+            if(category === 'عشوائي') {
+                currentCategoryName = "عشوائي";
+                for(let cat in database) wordsArray = wordsArray.concat(database[cat].words);
+            } else {
+                currentCategoryName = category;
+                wordsArray = database[category].words;
+            }
+            currentWord = wordsArray[Math.floor(Math.random() * wordsArray.length)];
+            
+            let rolesArray = Array(players).fill('مواطن');
+            for (let i = 0; i < spies; i++) rolesArray[i] = 'جاسوس';
+            rolesArray.sort(() => Math.random() - 0.5); 
+            
+            viewOrder = Array.from({length: players}, (_, i) => i + 1).sort(() => Math.random() - 0.5);
+            playerRoles = {};
+            for(let i=0; i<players; i++) playerRoles[viewOrder[i]] = rolesArray[i];
+            
+            currentPassIndex = 0;
+            updatePassScreen();
+            switchScreen('category-screen', 'pass-screen');
+        }
+
+        function updatePassScreen() {
+            document.getElementById('currentPlayerNumDisplay').innerText = viewOrder[currentPassIndex];
+            document.getElementById('totalPlayersDisplay').innerText = players;
+        }
+
+        function showCard() {
+            const content = document.getElementById('cardContent');
+            const actualPlayerNum = viewOrder[currentPassIndex];
+            const role = playerRoles[actualPlayerNum];
+
+            if (role === 'جاسوس') {
+                content.innerHTML = `
+                    <h3 class="text-white text-xl font-bold mb-8 tracking-widest">أنت جاسوس</h3>
+                    <i class="fa-solid fa-user-secret icon-massive text-white mb-8 spy-mask"></i>
+                    <p class="text-gray-400 text-lg">اعمل كأنك عارف</p>
+                `;
+            } else {
+                content.innerHTML = `
+                    <h3 class="text-[#2dd4bf] text-xl font-bold mb-4 tracking-widest">أنت مش جاسوس</h3>
+                    <p class="text-gray-400 text-sm mb-6">القسم: ${currentCategoryName}</p>
+                    <i class="fa-solid ${currentWord.i} icon-massive text-gray-200 mb-6 drop-shadow-md"></i>
+                    <h2 class="text-3xl font-black text-white">${currentWord.n}</h2>
+                `;
+            }
+            switchScreen('pass
